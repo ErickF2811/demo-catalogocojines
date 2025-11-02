@@ -1,10 +1,21 @@
+# version: "3.8"
+
+# services:
+#   web:
+#     image: erifcamp/demo-catalogocojines:v1.0
+#     container_name: demo-catalogocojines
+#     ports:
+#       - "5000:5000"
+#     environment:
+#       - DATABASE_URL=postgresql://admin:admin123@172.21.0.8:5432/cojines
+#     restart: unless-stopped
 version: "3.8"
 
 services:
   web:
-    build: .
-    ports:
-      - "8800:5000"
+    image: erifcamp/demo-catalogocojines:v1.0
+    container_name: demo-catalogocojines
     environment:
       - DATABASE_URL=postgresql://admin:admin123@172.21.0.8:5432/cojines
+    network_mode: host
     restart: unless-stopped

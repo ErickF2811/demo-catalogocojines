@@ -75,16 +75,16 @@ Los siguientes comandos asumen que tienes un registro de contenedores (Docker Hu
 
 ```powershell
 # Variables de despliegue
-$REGISTRY = "cojines-app"          # ej. docker.io, ghcr.io, miacr.azurecr.io
-$NAMESPACE = "erifcamp"               # opcional según el registry
+$REGISTRY = "docker.io"              # ej. docker.io, ghcr.io, miacr.azurecr.io
+$NAMESPACE = "erifcamp"              # opcional según el registry
 $IMAGE = "demo-catalogocojines"
-$TAG = "v1.0"                         # o "latest"
+$TAG = "v1.0"                        # o "latest"
 
 # Nombre completo de la imagen
 if ($NAMESPACE) {
-  $FULL = "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
+  $FULL = "${REGISTRY}/${NAMESPACE}/${IMAGE}:${TAG}"
 } else {
-  $FULL = "$REGISTRY/$IMAGE:$TAG"
+  $FULL = "${REGISTRY}/${IMAGE}:${TAG}"
 }
 
 # 1) Login (puede pedir usuario/token)
@@ -99,6 +99,7 @@ docker push $FULL
 # 4) (Opcional) Ejecutar la imagen publicada en cualquier host
 #    Requiere pasar DATABASE_URL y mapear puertos
 docker run --rm -e DATABASE_URL=$env:DATABASE_URL -p 8800:5000 $FULL
+
 ```
 
 Sugerencia: también puedes etiquetar y subir `latest` además del tag versionado:
