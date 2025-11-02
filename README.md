@@ -1,5 +1,6 @@
 # demo-catalogocojines
 
+
 Aplicación Flask que muestra los registros de la vista `vista_catalogo_sin_fechas` filtrados por el valor de `stack`.
 
 ## Requisitos previos
