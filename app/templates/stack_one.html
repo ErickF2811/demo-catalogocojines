@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <title>Catálogo - Stack 1</title>
     <style>
-      :root {
-        color-scheme: light dark;
-      }
+      :root { color-scheme: light; }
       body {
         font-family: 'Segoe UI', Arial, sans-serif;
         margin: 0;
@@ -14,101 +12,77 @@
         color: #1a202c;
       }
       header {
-        padding: 1.5rem 2rem;
-        background: linear-gradient(120deg, #2b6cb0, #2c5282);
+        padding: 2rem;
         color: white;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background-size: cover; background-position: center; background-repeat: no-repeat;
       }
-      main {
-        padding: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem 2rem;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
-        margin-bottom: 2rem;
-      }
-      dl {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 1rem 2rem;
-        margin: 0;
-      }
-      dt {
-        font-weight: 600;
-        color: #2c5282;
-      }
-      dd {
-        margin: 0;
-        font-weight: 500;
-      }
-      iframe {
-        width: 100%;
-        height: 75vh;
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 6px 24px rgba(15, 23, 42, 0.2);
-      }
-      .fallback {
-        text-align: center;
-        padding: 2rem 1rem;
-        background: rgba(43, 108, 176, 0.05);
-        border-radius: 12px;
-        border: 1px solid rgba(43, 108, 176, 0.15);
-      }
-      a.button {
-        display: inline-block;
-        margin-top: 1rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 999px;
-        background: #2b6cb0;
-        color: white;
-        text-decoration: none;
-        font-weight: 600;
-        transition: background 0.2s ease;
-      }
-      a.button:hover {
-        background: #2c5282;
-      }
+      main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+      .card { background: white; border-radius: 12px; padding: 1.5rem 2rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15); margin-bottom: 2rem; }
+      .filters { display: grid; grid-template-columns: minmax(240px, 1fr) auto; gap: 1rem 1.25rem; align-items: end; }
+      @media (max-width: 640px) { .filters { grid-template-columns: 1fr; } }
+      dt { font-weight: 600; color: #2c5282; }
+      dd { margin: 0; font-weight: 500; }
+      .inline { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+      select { padding: .5rem .75rem; border-radius: 8px; border: 1px solid #cbd5e0; background-color: #ffffff; color: #1a202c; font-weight: 600; min-width: 240px; appearance: auto; }
+      option { background-color: #ffffff; color: #1a202c; }
+      a.button { display: inline-block; padding: 0.55rem 1rem; border-radius: 999px; background: #2b6cb0; color: white; text-decoration: none; font-weight: 600; transition: background 0.2s ease; white-space: nowrap; }
+      a.button:hover { background: #2c5282; }
+      iframe { width: 100%; height: 75vh; border: none; border-radius: 12px; box-shadow: 0 6px 24px rgba(15, 23, 42, 0.2); }
+      .actions { justify-self: end; }
+      .meta { margin-top: .75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .5rem 1rem; }
     </style>
   </head>
   <body>
-    <header>
-      <h1>Catálogo disponible</h1>
-      <p>Mostrando el contenido del stack 1 desde la base de datos.</p>
+    <header style="
+      background:
+        {% if selected.url_portada %}
+          linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.45)), url('{{ selected.url_portada }}');
+        {% else %}
+          linear-gradient(120deg, #2b6cb0, #2c5282);
+        {% endif %}
+    ">
+      <h1>{{ selected.catalog_name or 'Catálogo' }}</h1>
+      <p>{{ selected.description or 'Mostrando el contenido del stack 1 desde la base de datos.' }}</p>
     </header>
     <main>
       <section class="card">
-        <dl>
-          <div>
-            <dt>ID</dt>
-            <dd>{{ row.catalog_id }}</dd>
+        <form method="get">
+          <div class="filters">
+            <div>
+              <dt>Nombre</dt>
+              <dd>
+                <select name="id" aria-label="Seleccionar catálogo" onchange="this.form.submit()">
+                  {% for row in rows %}
+                    <option value="{{ row.catalog_id }}" {% if row.catalog_id == selected.catalog_id %}selected{% endif %}>
+                      {{ row.catalog_name }} — {{ row.collection }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </dd>
+            </div>
+            <div class="actions">
+              {% if selected.url_catalogo %}
+              <a class="button" href="{{ selected.url_catalogo }}" target="_blank" rel="noopener noreferrer">Abrir catálogo en nueva pestaña</a>
+              {% endif %}
+            </div>
           </div>
-          <div>
-            <dt>Nombre</dt>
-            <dd>{{ row.catalog_name }}</dd>
-          </div>
+        </form>
+        <div class="meta">
           <div>
             <dt>Colección</dt>
-            <dd>{{ row.collection }}</dd>
+            <dd>{{ selected.collection }}</dd>
           </div>
-          <div>
-            <dt>Stack</dt>
-            <dd>{{ row.stack }}</dd>
-          </div>
-        </dl>
+        </div>
       </section>
       <section class="card">
         <h2>Catálogo</h2>
         <p>El documento se carga desde el almacenamiento configurado en la base de datos.</p>
-        <iframe src="{{ row.url_catalogo }}" title="Catálogo Stack 1" allowfullscreen></iframe>
-        <div class="fallback">
-          <p>Si el PDF no se muestra correctamente, puedes abrirlo directamente.</p>
-          <a class="button" href="{{ row.url_catalogo }}" target="_blank" rel="noopener noreferrer">Abrir en nueva pestaña</a>
-        </div>
+        {% if selected.url_catalogo %}
+          <iframe src="{{ selected.url_catalogo }}" title="Catálogo seleccionado" allowfullscreen></iframe>
+        {% else %}
+          <p><em>Este registro no posee URL de catálogo.</em></p>
+        {% endif %}
       </section>
     </main>
   </body>
