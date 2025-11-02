@@ -1,6 +1,8 @@
 # demo-catalogocojines
 
+
 Aplicación Flask que muestra automáticamente el PDF asociado al stack `1` leyendo la información desde la vista `vista_catalogo_sin_fechas` en PostgreSQL.
+
 
 ## Requisitos previos
 
@@ -34,7 +36,9 @@ Puedes definirla de dos formas:
    ```bash
    docker compose up --build
    ```
-3. Abre <http://localhost:5000> en tu navegador. La página cargará el registro con `stack = 1` y mostrará el PDF disponible en `url_catalogo`.
+
+3. Abre <http://localhost:5000> en tu navegador y navega a `/stack/<id>` (por ejemplo `/stack/1`).
+
 
 Para detener los contenedores:
 ```bash
@@ -57,6 +61,8 @@ docker compose down
    ```bash
    flask --app app.main run --debug
    ```
-5. Abre <http://localhost:5000> en tu navegador. El PDF asociado al stack `1` se mostrará automáticamente.
+
+5. Abre <http://localhost:5000> en tu navegador.
 
 Cuando termines, puedes desactivar el entorno virtual con `deactivate`.
+
