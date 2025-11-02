@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Stack {{ stack_id }} · Catálogo de Cojines</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f5f5f5; }
+      main { max-width: 960px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; }
+      h1 { color: #2a4365; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+      th, td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+      th { background-color: #ebf8ff; }
+      tbody tr:nth-child(even) { background-color: #f7fafc; }
+      a { color: #2b6cb0; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Stack {{ stack_id }}</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Colección</th>
+            <th>Stack</th>
+            <th>URL catálogo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr>
+            <td>{{ row.catalog_id }}</td>
+            <td>{{ row.catalog_name }}</td>
+            <td>{{ row.collection }}</td>
+            <td>{{ row.stack }}</td>
+            <td>
+              {% if row.url_catalogo %}
+              <a href="{{ row.url_catalogo }}" target="_blank" rel="noopener noreferrer">Abrir</a>
+              {% else %}
+              <em>No disponible</em>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p><a href="/">Volver al inicio</a></p>
+    </main>
+  </body>
+</html>
