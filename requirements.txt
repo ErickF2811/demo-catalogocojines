@@ -1,2 +1,4 @@
 Flask==3.0.3
 psycopg2-binary==2.9.9
+opencensus==0.11.4
+opencensus-ext-azure==1.1.9

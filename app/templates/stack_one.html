@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catálogo - Stack 1</title>
+    <title>CATÁLOGO COJINES CONFORT</title>
     <style>
       :root { color-scheme: light; }
       * { box-sizing: border-box; }
@@ -16,21 +16,32 @@
       header p { margin: 0; text-shadow: 0 1px 6px rgba(0,0,0,.3); font-size: clamp(.9rem, .5vw + .8rem, 1rem); }
       main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
       .card { background: #fff; border-radius: 12px; padding: 1.5rem 2rem; box-shadow: 0 10px 30px rgba(15,23,42,.15); margin-bottom: 2rem; overflow: hidden; }
+      .card h2 { margin-top: 0; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+      .catalog-card { display: flex; flex-direction: column; gap: .75rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 8px 24px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.9); position: relative; background: #fff; background-image: linear-gradient(180deg, #ffffff, #f8fbff), radial-gradient(circle at 1px 1px, rgba(0,0,0,.03) 1px, transparent 1px); background-size: auto, 10px 10px; background-blend-mode: normal, multiply; }
+      .catalog-card h3 { margin: .25rem 0 0; font-size: 1.05rem; color: #2a4365; }
+      .catalog-card small { color: #4a5568; }
       dt { font-weight: 600; color: #2c5282; }
       dd { margin: 0; font-weight: 500; }
       .filters { display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.25rem; align-items: end; width: 100%; }
       .filters > * { min-width: 0; }
       select { width: 100%; padding: .6rem .75rem; border-radius: 8px; border: 1px solid #cbd5e0; background: #fff; color: #1a202c; font-weight: 600; appearance: auto; }
       option { background: #fff; color: #1a202c; }
-      a.button { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1rem; border-radius: 10px; background: #2b6cb0; color: #fff; text-decoration: none; font-weight: 700; transition: background .2s ease; white-space: nowrap; max-width: 100%; }
-      a.button:hover { background: #2c5282; }
-      .actions { justify-self: end; align-self: end; }
+      a.button { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1rem; border-radius: 10px; color: #fff; text-decoration: none; font-weight: 700; transition: background .2s ease, transform .05s ease; white-space: nowrap; max-width: 100%;
+        background-image: linear-gradient(180deg, #2f6fb9, #2c5282), radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 1px);
+        background-size: auto, 10px 10px; border: 1px solid #1e4e8c; box-shadow: 0 6px 16px rgba(43,108,176,.35), inset 0 1px 0 rgba(255,255,255,.25);
+      }
+      a.button:hover { background-image: linear-gradient(180deg, #3b82d0, #2d5d94), radial-gradient(circle at 1px 1px, rgba(255,255,255,.18) 1px, transparent 1px); }
+      a.button:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(43,108,176,.35), inset 0 1px 0 rgba(255,255,255,.2); }
+      .actions { justify-self: end; align-self: end; margin: .75rem 0 0; }
       .hint { margin-top: .75rem; padding: .9rem 1rem; border-radius: 10px; background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; font-size: .95rem; }
       .hint a { color: #4a5568; font-weight: 600; text-decoration: underline; }
       .subcard { margin: .5rem 0 1rem; padding: 1rem; border-radius: 12px; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 14px rgba(15,23,42,.08); }
       .subcard .row { display: flex; gap: .75rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
       .subcard p { margin: 0; color: #4a5568; }
       .meta { margin-top: .75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .5rem 1rem; }
+      .cover { margin: .25rem 0 .5rem; }
+      .cover img { width: 100%; height: auto; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 6px 24px rgba(15,23,42,.12); background: #fff; }
       iframe { width: 100%; height: 75vh; border: none; border-radius: 12px; box-shadow: 0 6px 24px rgba(15,23,42,.2); }
       @media (max-width: 640px) {
         header { padding: 1.1rem 1.25rem; background-position: center 35%; min-height: 128px; }
@@ -45,58 +56,70 @@
   <body>
     <header style="
       background:
-        {% if selected.url_portada %}
-          linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.45)), url('{{ selected.url_portada }}');
+        {% if hero %}
+          linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.45)), url('{{ hero }}');
         {% else %}
           linear-gradient(120deg, #2b6cb0, #2c5282);
         {% endif %}
     ">
-      <h1>{{ selected.catalog_name or 'Catálogo' }}</h1>
-      <p>{{ selected.description or 'Mostrando el contenido del stack 1 desde la base de datos.' }}</p>
+      <h1>Catálogo Cojines Confort</h1>
+      <p>Catálogos del stack 1 desde la base de datos.</p>
     </header>
     <main>
+      {# Panel de actividad eliminado: los logs se verán en stdout del contenedor #}
       <section class="card">
-        <form method="get">
-          <div class="filters">
+        <h2>Catálogos</h2>
+        <div class="grid">
+          {% for row in rows %}
+          {% set cover = row.url_cartula or row.url_caratula or row.url_portada %}
+          <article class="catalog-card">
             <div>
-              <dt>Nombre</dt>
-              <dd>
-                <select name="id" aria-label="Seleccionar catálogo" onchange="this.form.submit()">
-                  {% for row in rows %}
-                    <option value="{{ row.catalog_id }}" {% if row.catalog_id == selected.catalog_id %}selected{% endif %}>
-                      {{ row.catalog_name }} — {{ row.collection }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </dd>
+              <h3>{{ row.catalog_name }}</h3>
+              <small>{{ row.collection }}</small>
             </div>
-            <!-- Botón movido a la sección de Catálogo -->
-          </div>
-        </form>
-        
-        <div class="meta">
-          <div>
-            <dt>Colección</dt>
-            <dd>{{ selected.collection }}</dd>
-          </div>
-        </div>
-      </section>
-      <section class="card">
-        <h2>Catálogo</h2>
-        <div class="subcard">
-          <div class="row">
-            <p>Si quieres ver el catálogo ampliado, selecciónalo aquí.</p>
-            {% if selected.url_catalogo %}
-            <a class="button" href="{{ selected.url_catalogo }}" target="_blank" rel="noopener noreferrer">Abrir catálogo en nueva pestaña</a>
+            {% if cover %}
+            <div class="cover" aria-label="Carátula del catálogo">
+              {% if row.url_catalogo %}
+                <a class="catalog-link" href="{{ row.url_catalogo }}" target="_blank" rel="noopener noreferrer" title="Abrir catálogo"
+                   data-catalog-id="{{ row.catalog_id }}" data-catalog-name="{{ row.catalog_name }}">
+                  <img src="{{ cover }}" alt="Carátula de {{ row.catalog_name }}" loading="lazy">
+                </a>
+              {% else %}
+                <img src="{{ cover }}" alt="Carátula de {{ row.catalog_name }}" loading="lazy">
+              {% endif %}
+            </div>
             {% endif %}
-          </div>
+            {% if row.url_catalogo %}
+            <div class="actions">
+              <a class="button catalog-link" href="{{ row.url_catalogo }}" target="_blank" rel="noopener noreferrer"
+                 data-catalog-id="{{ row.catalog_id }}" data-catalog-name="{{ row.catalog_name }}">Visita este catálogo</a>
+            </div>
+            {% endif %}
+          </article>
+          {% endfor %}
         </div>
-        {% if selected.url_catalogo %}
-          <iframe src="{{ selected.url_catalogo }}#zoom=page-width" title="Catálogo seleccionado" allowfullscreen></iframe>
-        {% else %}
-          <p><em>Este registro no posee URL de catálogo.</em></p>
-        {% endif %}
       </section>
     </main>
+    <script>
+      async function logClick(ev){
+        try{
+          const a = ev.currentTarget;
+          await fetch('/log/click',{
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+              message: 'catalog_click',
+              target: 'anchor',
+              catalog_id: a.dataset.catalogId,
+              catalog_name: a.dataset.catalogName,
+              href: a.href
+            })
+          });
+        }catch(e){ /* ignore */ }
+      }
+      // Adjunta listeners para enviar clics al backend (se verá en logs)
+      document.querySelectorAll('a.catalog-link').forEach(a=>{
+        a.addEventListener('click', logClick);
+      });
+    </script>
   </body>
   </html>

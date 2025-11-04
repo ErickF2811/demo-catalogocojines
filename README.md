@@ -19,7 +19,7 @@ Rutas principales:
 
 - Docker y Docker Compose (v2 o superior).
 - Python 3.10+ si deseas ejecutar sin contenedores.
-- Una base PostgreSQL accesible con la vista `vista_catalogo_stack1`.
+- Una base PostgreSQL accesible con la vista `6`.
 
 ## Variables de Entorno
 
@@ -40,7 +40,7 @@ DATABASE_URL=postgresql://usuario:password@host:5432/base
 PowerShell (Windows):
 
 ```powershell
-$env:DATABASE_URL = "postgresql://usuario:password@host:5432/base"
+$env:DATABASE_URL = "postgresql://admin:admin123@172.21.0.8:5432/cojines"
 ```
 
 Linux/macOS (bash):
@@ -128,7 +128,7 @@ pip install -r requirements.txt
 3) Definir `DATABASE_URL` y ejecutar Flask:
 
 ```powershell
-$env:DATABASE_URL = "postgresql://usuario:password@host:5432/base"
+$env:DATABASE_URL = "postgresql://admin:admin123@172.21.0.8:5432/base"
 flask --app app.main run --debug
 ```
 
