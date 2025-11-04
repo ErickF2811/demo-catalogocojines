@@ -27,6 +27,13 @@ Rutas principales:
   - Formato: `postgresql://usuario:password@host:5432/base`
 - Variables ya definidas en Dockerfile para ejecutar Flask dentro del contenedor: `FLASK_APP=app.main:app`, `FLASK_RUN_HOST=0.0.0.0`, `FLASK_RUN_PORT=5000`.
 
+- Telemetría (opcional, para enviar logs a Azure Application Insights/LAW): define UNA de estas variables. Si no defines ninguna, los eventos solo se verán en los logs del contenedor (stdout) y no se guardarán en Azure.
+  - `APPLICATIONINSIGHTS_CONNECTION_STRING`: el Connection String completo devuelto por Azure (recomendado).
+    - Ejemplo: `InstrumentationKey=3078cb55-ff75-4514-9b65-4f09881ee65a;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/;ApplicationId=...`
+  - `APPINSIGHTS_INSTRUMENTATIONKEY`: solo la Instrumentation Key. El sistema construye el connection string automáticamente.
+
+Notas de privacidad: la IP del cliente se registra como `customDimensions.ip` para tus consultas en Kusto; verifica tu base legal para almacenar IPs.
+
 Puedes definir `DATABASE_URL` de dos formas:
 
 1) Archivo `.env` en la raíz del proyecto (lo leerá Docker Compose):
@@ -41,12 +48,16 @@ PowerShell (Windows):
 
 ```powershell
 $env:DATABASE_URL = "postgresql://admin:admin123@172.21.0.8:5432/cojines"
+# (opcional) enviar logs a Azure
+$env:APPLICATIONINSIGHTS_CONNECTION_STRING = "InstrumentationKey=...;IngestionEndpoint=...;..."
 ```
 
 Linux/macOS (bash):
 
 ```bash
 export DATABASE_URL="postgresql://usuario:password@host:5432/base"
+# (opcional) enviar logs a Azure
+export APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=...;IngestionEndpoint=...;..."
 ```
 
 ## Ejecutar con Docker Compose
@@ -78,7 +89,7 @@ Los siguientes comandos asumen que tienes un registro de contenedores (Docker Hu
 $REGISTRY = "docker.io"              # ej. docker.io, ghcr.io, miacr.azurecr.io
 $NAMESPACE = "erifcamp"              # opcional según el registry
 $IMAGE = "demo-catalogocojines"
-$TAG = "v1.0"                        # o "latest"
+$TAG = "v2.0"                        # o "latest"
 
 # Nombre completo de la imagen
 if ($NAMESPACE) {
@@ -99,6 +110,12 @@ docker push $FULL
 # 4) (Opcional) Ejecutar la imagen publicada en cualquier host
 #    Requiere pasar DATABASE_URL y mapear puertos
 docker run --rm -e DATABASE_URL=$env:DATABASE_URL -p 8800:5000 $FULL
+
+# (opcional) con telemetría a Azure
+docker run --rm \
+  -e DATABASE_URL=$env:DATABASE_URL \
+  -e APPLICATIONINSIGHTS_CONNECTION_STRING=$env:APPLICATIONINSIGHTS_CONNECTION_STRING \
+  -p 8800:5000 $FULL
 
 ```
 
@@ -129,8 +146,36 @@ pip install -r requirements.txt
 
 ```powershell
 $env:DATABASE_URL = "postgresql://admin:admin123@172.21.0.8:5432/base"
+# (opcional) telemetría a Azure
+$env:APPLICATIONINSIGHTS_CONNECTION_STRING = "InstrumentationKey=...;IngestionEndpoint=...;..."
 flask --app app.main run --debug
 ```
 
 Abrir: http://localhost:5000
 
+## Consultas de Logs en Azure (KQL de ejemplo)
+
+- Últimos eventos (vistas y clics):
+
+```
+AppTraces
+| where customDimensions.kind in ("view","click")
+| top 50 by timestamp desc
+```
+
+- Clics por catálogo:
+
+```
+AppTraces
+| where customDimensions.kind == "click"
+| summarize clicks = count() by tostring(customDimensions.catalog_name)
+| order by clicks desc
+```
+
+- IPs únicas:
+
+```
+AppTraces
+| where customDimensions.kind == "view"
+| summarize dcount(tostring(customDimensions.ip))
+```
