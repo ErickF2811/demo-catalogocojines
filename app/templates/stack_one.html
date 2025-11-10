@@ -27,13 +27,44 @@
       .filters > * { min-width: 0; }
       select { width: 100%; padding: .6rem .75rem; border-radius: 8px; border: 1px solid #cbd5e0; background: #fff; color: #1a202c; font-weight: 600; appearance: auto; }
       option { background: #fff; color: #1a202c; }
-      a.button { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1rem; border-radius: 10px; color: #fff; text-decoration: none; font-weight: 700; transition: background .2s ease, transform .05s ease; white-space: nowrap; max-width: 100%;
+      a.button { display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1rem; border-radius: 10px; color: #fff; text-decoration: none; font-weight: 700; transition: background .2s ease, transform .05s ease; white-space: nowrap; width: 100%; gap: .45rem;
         background-image: linear-gradient(180deg, #2f6fb9, #2c5282), radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 1px);
         background-size: auto, 10px 10px; border: 1px solid #1e4e8c; box-shadow: 0 6px 16px rgba(43,108,176,.35), inset 0 1px 0 rgba(255,255,255,.25);
       }
       a.button:hover { background-image: linear-gradient(180deg, #3b82d0, #2d5d94), radial-gradient(circle at 1px 1px, rgba(255,255,255,.18) 1px, transparent 1px); }
       a.button:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(43,108,176,.35), inset 0 1px 0 rgba(255,255,255,.2); }
-      .actions { justify-self: end; align-self: end; margin: .75rem 0 0; }
+      .actions {
+        justify-self: stretch;
+        align-self: stretch;
+        width: 100%;
+        margin: .75rem 0 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .65rem;
+      }
+      a.button .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      a.button .icon img {
+        width: 18px;
+        height: 18px;
+        display: block;
+      }
+      a.button.whatsapp {
+        background-image: linear-gradient(180deg, #25d366, #128c7e);
+        border: 1px solid #0f6f63;
+        box-shadow: 0 6px 16px rgba(18,140,126,.35), inset 0 1px 0 rgba(255,255,255,.25);
+      }
+      a.button.whatsapp:hover {
+        background-image: linear-gradient(180deg, #2fe07b, #10907f);
+      }
+      a.button.whatsapp:active {
+        transform: translateY(1px);
+        box-shadow: 0 4px 10px rgba(18,140,126,.35), inset 0 1px 0 rgba(255,255,255,.2);
+      }
       .hint { margin-top: .75rem; padding: .9rem 1rem; border-radius: 10px; background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; font-size: .95rem; }
       .hint a { color: #4a5568; font-weight: 600; text-decoration: underline; }
       .subcard { margin: .5rem 0 1rem; padding: 1rem; border-radius: 12px; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 14px rgba(15,23,42,.08); }
@@ -93,6 +124,13 @@
             <div class="actions">
               <a class="button catalog-link" href="{{ row.url_catalogo }}" target="_blank" rel="noopener noreferrer"
                  data-catalog-id="{{ row.catalog_id }}" data-catalog-name="{{ row.catalog_name }}">Visita este catálogo</a>
+              <a class="button whatsapp" href="https://wa.me/59342731603" target="_blank" rel="noopener noreferrer"
+                 aria-label="Abrir conversación de WhatsApp con el asesor">
+                <span class="icon" aria-hidden="true">
+                  <img src="{{ url_for('static', filename='icon/R.png') }}" alt="">
+                </span>
+                Escríbenos por WhatsApp
+              </a>
             </div>
             {% endif %}
           </article>
@@ -122,4 +160,4 @@
       });
     </script>
   </body>
-  </html>
+</html>
